@@ -1,16 +1,16 @@
 import datetime
 import json
 class Venta:
-    def __init__(self,idVenta, fecha, cliente, productos, montoTotal):
-        self.idVenta = idVenta
+    def __init__(self,id_venta, fecha, cliente, productos, monto_total):
+        self.id_venta = idVenta
         self.fecha = fecha
         self.cliente = cliente
-        self.montoTotal = self.validarMontoTotal(montoTotal)
+        self.monto_total = self.validar_monto_total(monto_total)
         self.productos = productos 
 
         @property
-        def idVenta(self):
-            return self.__idVenta
+        def id_venta(self):
+            return self.__id_venta
         @property
         def fecha(self):
             return self.__fecha
@@ -21,56 +21,56 @@ class Venta:
         def productos(self):
             return self.__productos
         @property
-        def montoTotal(self):
-            return self.__montoTotal
+        def monto_total(self):
+            return self.__monto_total
         
-        @montoTotal.setter
-        def montoTotal(self, nuevoMontoTotal):
-            self.__montoTotal = self.validarMontoTotal(self, nuevoMontoTotal)
+        @monto_total.setter
+        def monto_total(self, nuevo_monto_total):
+            self.__monto_total = self.validar_Monto_Total(self, nuevo_monto_total)
 
     
-    def validarMontoTotal(self, monto):
+    def validar_monto_total(self, monto):
         try:
-            montoTotalNum = float(monto)
-            if montoTotalNum <= 0:
+            monto_total_num = float(monto)
+            if monto_total_num <= 0:
                 raise ValueError("El monto total debe ser un valor numérico positivo.")
-            return montoTotalNum
+            return monto_total_num
         except ValueError:
             raise ValueError("El monto total debe ser un número válido.")
 
     
     def __str__(self):
-        return f'ID venta: {self.idVenta}, Fecha: {self.fecha}, Cliente: {self.cliente}, Monto Total: {self.montoTotal}, Productos: {self.productos}'
+        return f'ID venta: {self.id_venta}, Fecha: {self.fecha}, Cliente: {self.cliente}, Monto Total: {self.monto_total}, Productos: {self.productos}'
     
     def to_dict(self):
         return {
-            'idVenta': self.idVenta,
+            'id_venta': self.id_venta,
             'fecha': self.fecha,
             'cliente': self.cliente,
-            'montoTotal': self.montoTotal,
+            'monto_total': self.monto_total,
             'productos': self.productos,
         }
 
 class VentaOnline(Venta):
-    def __init__(self, idVenta, fecha, cliente, productos, montoTotal, direccionEnvio,):
-        super().__init__(idVenta, fecha, cliente, productos, montoTotal)
-        self.direccionEnvio= direccionEnvio
+    def __init__(self, id_venta, fecha, cliente, productos, monto_total, direccion_envio,):
+        super().__init__(id_venta, fecha, cliente, productos, monto_total)
+        self.direccion_envio= direccion_envio
 
     @property
-    def direccionEnvio(self):
-        return self.__direccionEnvio
+    def direccion_envio(self):
+        return self.__direccion_envio
 
     def __str__(self):
-        return f'{super().__str__()}, Dirrección envio: {self.direccionEnvio}'
+        return f'{super().__str__()}, Dirección envio: {self.direccion_envio}'
 
     def to_dict(self):
         data=super().to_dict()
-        data['direccionEnvio']=self.direccionEnvio
+        data['direccion_envio']=self.direccion_envio
         return data
 
 class VentaLocal(Venta):
-    def __init__(self, idVenta, fecha, cliente, productos, montoTotal, vendedor):
-        super().__init__(idVenta, fecha, cliente, productos, montoTotal)
+    def __init__(self, id_venta, fecha, cliente, productos, monto_total, vendedor):
+        super().__init__(id_venta, fecha, cliente, productos, monto_total)
         self.vendedor= vendedor
     
     @property
@@ -90,7 +90,7 @@ class GestionVentas:
         self.archivo = archivo
         
 
-    def leerDatos(self):
+    def leer_datos(self):
         try:
             with open(self.archivo, 'r') as file:
                 datos = json.load(file)
@@ -101,7 +101,7 @@ class GestionVentas:
         else:
             return datos
 
-    def guardarDatos(self, datos):
+    def guardar_datos(self, datos):
         try:
             with open(self.archivo, 'w') as file:
                 json.dump(datos, file, indent=4)
@@ -111,55 +111,55 @@ class GestionVentas:
         except Exception as error:
             print(f'Error inesperado: {error}')
 
-    def crearVenta(self, venta):
+    def crear_venta(self, venta):
         try:
-            datos = self.leerDatos()
-            idVenta = venta.idVenta
-            if not str(idVenta) in datos.keys():
-                datos[idVenta] = venta.to_dict()
+            datos = self.leer_datos()
+            id_venta = venta.id_venta
+            if not str(id_venta) in datos.keys():
+                datos[id_venta] = venta.to_dict()
                 self.guardarDatos(datos)
                 print(f"Fecha: {venta.fecha}, Cliente: {venta.cliente}...la venta se guardo correctamente.")
             else:
-                print(f"Ya existe la venta con el mismo id '{idVenta}'.")
+                print(f"Ya existe la venta con el mismo id '{id_venta}'.")
         except Exception as error:
             print(f'Error inesperado al crear la venta: {error}')
 
-    def leerVenta(self, idVenta):
+    def leer_venta(self, id_venta):
         try:
-            datos = self.leerDatos()
-            if idVenta in datos:
-                venta_data = datos[idVenta]
-                if 'direccionEnvio' in venta_data:
+            datos = self.leer_datos()
+            if id_venta in datos:
+                venta_data = datos[id_venta]
+                if 'direccion_envio' in venta_data:
                     venta = VentaOnline(**venta_data)
                 else:
                     venta = VentaLocal(**venta_data)
-                print(f'Se econtro con éxito la venta con id: {idVenta}')
+                print(f'Se econtro con éxito la venta con id: {id_venta}')
             else:
-                print(f'No se encontró la venta con id: {idVenta}')
+                print(f'No se encontró la venta con id: {id_venta}')
         except Exception as e:
             print('Error al leer venta: {e}')
     
-    def actualizarMontoTotal(self, idVenta, nuevoMontoTotal):
+    def actualizar_monto_total(self, id_venta, nuevo_monto_total):
         try:
-            datos = self.leerDatos()
-            if str(idVenta) in datos.keys():
-                datos[idVenta]['montoTotal'] = nuevoMontoTotal
-                self.guardarDatos(datos)
-                print(f'El monto total de la venta con id:{idVenta}, fue actualiozado con éxito')
+            datos = self.leer_datos()
+            if str(id_venta) in datos.keys():
+                datos[id_venta]['monto_total'] = nuevo_monto_total
+                self.guardar_datos(datos)
+                print(f'El monto total de la venta con id:{id_venta}, fue actualiozado con éxito')
             else:
-                print(f'No se encontró venta con la id:{idVenta}')
+                print(f'No se encontró venta con la id:{id_venta}')
         except Exception as e:
             print(f'Error al actualizar la venta: {e}')
 
-    def eliminarVenta(self, idVenta):
+    def eliminar_venta(self, id_venta):
         try:
-            datos = self.leerDatos()
-            if str(idVenta) in datos.keys():
-                del datos[idVenta]
-                self.guardarDatos(datos)
-                print(f'La venta con la id:{idVenta} se ha eliminado correctamente')
+            datos = self.leer_datos()
+            if str(id_venta) in datos.keys():
+                del datos[id_venta]
+                self.guardar_datos(datos)
+                print(f'La venta con la id:{id_venta} se ha eliminado correctamente')
             else:
-                print(f'No se encontró la venta con la id:{idVenta}')
+                print(f'No se encontró la venta con la id:{id_venta}')
         except Exception as e:
             print(f'Error al eliminar la venta: {e}')
 
