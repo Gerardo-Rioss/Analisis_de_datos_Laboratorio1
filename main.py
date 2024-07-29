@@ -27,7 +27,7 @@ def mostrar_menu():
 
 def agregar_venta(gestion, tipo_venta):
     try:
-        id_venta= input('Ingrese el id de venta: ')
+        id_venta = str(len(gestion.leer_datos())+1)
         fecha = datetime.datetime.now().strftime("%d-%m-%y")
         cliente= input('Ingrese el cliente: ')
         monto_total= float(input('Ingrese el monto total de la venta: '))
@@ -51,12 +51,10 @@ def agregar_venta(gestion, tipo_venta):
     except Exception as e:
         print(f'Error inesperado: {e}')
 
-
 def buscar_venta_por_id(gestion):
     id_venta = input('Ingrese la id de la venta a buscar: ')
     gestion.leer_venta(id_venta)
     input('Presione enter para continuar...')
-    
 
 def actualizar_monto_total_venta(gestion):
     id_venta = input('Ingrese el ID de la venta que quiere actualizar el monto total: ')
@@ -64,23 +62,20 @@ def actualizar_monto_total_venta(gestion):
     gestion.actualizar_monto_total(id_venta, nuevo_monto_total)
     input('Presione enter para continuar...')
 
-
 def eliminar_venta_por_id(gestion):
     id_venta = input('Ingrese el ID de la venta que quiere eliminar:  ')
     gestion.eliminar_venta(id_venta)
     input('Presione enter para continuar...')
 
-
 def mostrar_todas_las_ventas(gestion):
     print('=============== Listado completo de las  Ventas ==============')
     for venta in gestion.leer_datos().values():
         if 'direccion_envio' in venta:
-            print(f"ID {venta['id_venta']} - CLiente {venta['cliente']} - Monto: {venta['monto_total']} - Dirección envío: {venta['direccion_envio']}")
+            print(f"id_venta: {venta['id_venta']} - CLiente {venta['cliente']} - Monto: {(venta['monto_total']):.2f} - Dirección envío: {venta['direccion_envio']}")
         else:
-            print(f"ID {venta['id_venta']} - CLiente {venta['cliente']} - Monto: {venta['monto_total']} - Vendedor: {venta['vendedor']}")
+            print(f"ID {venta['id_venta']} - CLiente {venta['cliente']} - Monto: {(venta['monto_total']):.2f} - Vendedor: {venta['vendedor']}")
     print('=====================================================================')
     input('Presione enter para continuar...')
-        
 
 if __name__ == '__main__':
     archivo_ventas='ventas_db.json'

@@ -2,7 +2,7 @@ import datetime
 import json
 class Venta:
     def __init__(self,id_venta, fecha, cliente, productos, monto_total):
-        self.id_venta = idVenta
+        self.id_venta = id_venta
         self.fecha = fecha
         self.cliente = cliente
         self.monto_total = self.validar_monto_total(monto_total)
@@ -59,6 +59,10 @@ class VentaOnline(Venta):
     @property
     def direccion_envio(self):
         return self.__direccion_envio
+    
+    @direccion_envio.setter
+    def direccion_envio(self, nueva_direccion_envio):
+        self.__direccion_envio = nueva_direccion_envio
 
     def __str__(self):
         return f'{super().__str__()}, Dirección envio: {self.direccion_envio}'
@@ -114,10 +118,10 @@ class GestionVentas:
     def crear_venta(self, venta):
         try:
             datos = self.leer_datos()
-            id_venta = venta.id_venta
+            id_venta = str(venta.id_venta)
             if not str(id_venta) in datos.keys():
                 datos[id_venta] = venta.to_dict()
-                self.guardarDatos(datos)
+                self.guardar_datos(datos)
                 print(f"Fecha: {venta.fecha}, Cliente: {venta.cliente}...la venta se guardo correctamente.")
             else:
                 print(f"Ya existe la venta con el mismo id '{id_venta}'.")
