@@ -29,15 +29,57 @@ def agregar_venta(gestion, tipo_venta):
     try:
         id_venta = str(len(gestion.leer_datos())+1)
         fecha = datetime.datetime.now().strftime("%d-%m-%y")
-        cliente= input('Ingrese el cliente: ')
-        monto_total= round(float(input('Ingrese el monto total de la venta: ')),2)
-        productos= input('Ingrese los productos (separados por coma): ').split(',')
+        
+        while True:
+            cliente= input('Ingrese el cliente: ')
+            if cliente:
+                break
+            print("Error, debe ingresar el cliente... ")
+
+        while True:
+            try:
+                monto_total= round(float(input('Ingrese el monto total de la venta: ')),2)
+                if monto_total>0:
+                    break
+                else:
+                    print('El monto total debe ser mayor a cero.')
+            except ValueError:
+                print('Error, debe ingresar un número valido.')
+        
+        while True:
+            try:
+                productos= input('Ingrese los productos (separados por coma): ').split(',')
+                productos = [prod.strip()for prod in productos if prod.strip()]
+                if productos:
+                    break
+                else:
+                    print('Error, Debe ingresar al menos un producto válido.')
+            except ValueError:
+                print('Error, ha ocurrido un error al procesar los datos ingresados.-')
 
         if tipo_venta == '1':
-            direccion_envio= input('Ingrese la dirección del envio: ')
+            while True:
+                try:
+                    direccion_envio= input('Ingrese la dirección del envio: ')
+                    if direccion_envio:
+                        break
+                    else:
+                        print('Error, debe ingresar alguna dirección.')
+                except ValueError:
+                    print('Error, ha ocurrido un error al procesar los datos ingresados.-')
+
             venta = VentaOnline(id_venta,fecha,cliente,productos,monto_total, direccion_envio)
         elif tipo_venta == '2':
-            vendedor= input('Ingrese el vendedor: ')
+
+            while True:
+                try:
+                    vendedor= input('Ingrese el vendedor: ')
+                    if vendedor:
+                        break
+                    else:
+                        print('Error, debe ingresar el vendedor.')
+                except ValueError:
+                    print('Error, ha ocurrido un error al procesar los datos ingresados.-')
             venta= VentaLocal(id_venta,fecha,cliente,productos, monto_total, vendedor)
         else:
             print('Opción inválida')
