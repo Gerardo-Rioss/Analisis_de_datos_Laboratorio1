@@ -28,6 +28,12 @@ class Venta:
         def monto_total(self, nuevo_monto_total):
             self.__monto_total = self.validar_Monto_Total(self, nuevo_monto_total)
 
+        @cliente.setter
+        def cliente(self, nuevo_cliente):
+            self.__cliente = nuevo_cliente
+                
+
+
     
     def validar_monto_total(self, monto):
         try:
@@ -142,6 +148,8 @@ class GestionVentas:
                 else:
                     venta = VentaLocal(**venta_data)
                 print(f'Se econtro con éxito la venta con id: {id_venta}')
+                print('Datos de la venta: ')
+                print(venta)
             else:
                 print(f'No se encontró la venta con id: {id_venta}')
         except Exception as e:
@@ -154,6 +162,18 @@ class GestionVentas:
                 datos[id_venta]['monto_total'] = nuevo_monto_total
                 self.guardar_datos(datos)
                 print(f'El monto total de la venta con id: {id_venta}, fue actualizado con éxito')
+            else:
+                print(f'No se encontró venta con la id:{id_venta}')
+        except Exception as e:
+            print(f'Error al actualizar la venta: {e}')
+    
+    def actualizar_cliente(self, id_venta, nuevo_cliente):
+        try:
+            datos= self.leer_datos()
+            if str(id_venta) in datos.keys():
+                datos[id_venta]['cliente']= nuevo_cliente
+                self.guardar_datos(datos)
+                print('El cliente ha sido modificado con éxito')
             else:
                 print(f'No se encontró venta con la id:{id_venta}')
         except Exception as e:

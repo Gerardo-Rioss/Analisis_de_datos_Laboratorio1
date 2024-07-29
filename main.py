@@ -23,6 +23,7 @@ def mostrar_menu():
     print('4. Actualizar Monto Total de la venta por ID')
     print('5. Eliminarar Venta por ID')
     print('6. Salir')
+    print('7. Actualizar cliente de la venta por ID')
     print('======================================================')
 
 def agregar_venta(gestion, tipo_venta):
@@ -104,6 +105,13 @@ def actualizar_monto_total_venta(gestion):
     gestion.actualizar_monto_total(id_venta, nuevo_monto_total)
     input('Presione enter para continuar...')
 
+def actualizar_cliente(gestion):
+    id_venta=input('Ingrese la id de la venta que quiere actualizar el cliente: ')
+    gestion.leer_venta(id_venta)
+    nuevo_cliente =input('Ingrese el nuevo cliente: ')
+    gestion.actualizar_cliente(id_venta, nuevo_cliente)
+    input('Presione enter para continuar...')
+
 def eliminar_venta_por_id(gestion):
     id_venta = input('Ingrese el ID de la venta que quiere eliminar:  ')
     gestion.eliminar_venta(id_venta)
@@ -141,5 +149,7 @@ if __name__ == '__main__':
         elif opcion == '6':
             print('Saliendo del programa...')
             break
+        elif opcion == '7':
+            actualizar_cliente(gestion)
         else:
             print('Opción no válida. Por favor, seleccione una opción válida (1-6)')
