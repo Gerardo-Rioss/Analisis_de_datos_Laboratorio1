@@ -80,6 +80,10 @@ class VentaLocal(Venta):
     @property
     def vendedor(self):
         return self.__vendedor
+    
+    @vendedor.setter
+    def vendedor(self, nuevo_vendedor):
+        self.__vendedor = nuevo_vendedor
 
     def __str__(self):
         return f'{super().__str__()},  Vendedor: {self.vendedor}'
@@ -149,7 +153,7 @@ class GestionVentas:
             if str(id_venta) in datos.keys():
                 datos[id_venta]['monto_total'] = nuevo_monto_total
                 self.guardar_datos(datos)
-                print(f'El monto total de la venta con id:{id_venta}, fue actualiozado con éxito')
+                print(f'El monto total de la venta con id: {id_venta}, fue actualizado con éxito')
             else:
                 print(f'No se encontró venta con la id:{id_venta}')
         except Exception as e:

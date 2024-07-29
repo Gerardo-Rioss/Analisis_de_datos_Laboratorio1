@@ -30,7 +30,7 @@ def agregar_venta(gestion, tipo_venta):
         id_venta = str(len(gestion.leer_datos())+1)
         fecha = datetime.datetime.now().strftime("%d-%m-%y")
         cliente= input('Ingrese el cliente: ')
-        monto_total= float(input('Ingrese el monto total de la venta: '))
+        monto_total= round(float(input('Ingrese el monto total de la venta: ')),2)
         productos= input('Ingrese los productos (separados por coma): ').split(',')
 
         if tipo_venta == '1':
@@ -71,9 +71,10 @@ def mostrar_todas_las_ventas(gestion):
     print('=============== Listado completo de las  Ventas ==============')
     for venta in gestion.leer_datos().values():
         if 'direccion_envio' in venta:
-            print(f"id_venta: {venta['id_venta']} - CLiente {venta['cliente']} - Monto: {(venta['monto_total']):.2f} - Dirección envío: {venta['direccion_envio']}")
+            print(f"id: {venta['id_venta']} - CLiente {venta['cliente']} - Monto: ${(venta['monto_total']):.2f} - VENTA ONLINE - Dirección envío: {venta['direccion_envio']}")
         else:
-            print(f"ID {venta['id_venta']} - CLiente {venta['cliente']} - Monto: {(venta['monto_total']):.2f} - Vendedor: {venta['vendedor']}")
+            print(
+                f"id: {venta['id_venta']} - CLiente {venta['cliente']} - Monto: ${(venta['monto_total']):.2f} - VENTA LOCAL - Vendedor: {venta['vendedor']}")
     print('=====================================================================')
     input('Presione enter para continuar...')
 

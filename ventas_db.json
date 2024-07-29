@@ -1,1 +1,26 @@
-{}
+{
+    "1": {
+        "id_venta": "1",
+        "fecha": "29-07-24",
+        "cliente": "Rios Gerardo",
+        "monto_total": 50000.0,
+        "productos": [
+            "Producto1",
+            "Producto2",
+            "Producto3"
+        ],
+        "direccion_envio": "Pasaje Castelli 4460"
+    },
+    "2": {
+        "id_venta": "2",
+        "fecha": "29-07-24",
+        "cliente": "Arce Pedro",
+        "monto_total": 150000.0,
+        "productos": [
+            "Producto4",
+            "Producto5",
+            "Producto6"
+        ],
+        "vendedor": "Juan"
+    }
+}
