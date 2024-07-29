@@ -22,5 +22,27 @@
             "Producto6"
         ],
         "vendedor": "Juan"
+    },
+    "3": {
+        "id_venta": "3",
+        "fecha": "29-07-24",
+        "cliente": "Ojeda Alejandra",
+        "monto_total": 200000.0,
+        "productos": [
+            "Producto7",
+            " Producto8",
+            "Producto9"
+        ],
+        "vendedor": "juan"
+    },
+    "4": {
+        "id_venta": "4",
+        "fecha": "29-07-24",
+        "cliente": "Romero Jose",
+        "monto_total": 20000.0,
+        "productos": [
+            "Producto15"
+        ],
+        "direccion_envio": "Alberdi 1500"
     }
 }
