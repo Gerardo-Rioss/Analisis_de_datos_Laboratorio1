@@ -31,9 +31,10 @@ class Venta:
         @cliente.setter
         def cliente(self, nuevo_cliente):
             self.__cliente = nuevo_cliente
-                
-
-
+        
+        @productos.setter
+        def productos(self,nuevos_productos):
+            self.__productos= nuevos_productos
     
     def validar_monto_total(self, monto):
         try:
@@ -44,7 +45,6 @@ class Venta:
         except ValueError:
             raise ValueError("El monto total debe ser un número válido.")
 
-    
     def __str__(self):
         return f'ID venta: {self.id_venta}, Fecha: {self.fecha}, Cliente: {self.cliente}, Monto Total: {self.monto_total}, Productos: {self.productos}'
     
@@ -103,7 +103,6 @@ class GestionVentas:
     def __init__(self, archivo):
         self.archivo = archivo
         
-
     def leer_datos(self):
         try:
             with open(self.archivo, 'r') as file:
@@ -147,9 +146,7 @@ class GestionVentas:
                     venta = VentaOnline(**venta_data)
                 else:
                     venta = VentaLocal(**venta_data)
-                print(f'Se econtro con éxito la venta con id: {id_venta}')
-                print('Datos de la venta: ')
-                print(venta)
+                return venta
             else:
                 print(f'No se encontró la venta con id: {id_venta}')
         except Exception as e:
@@ -174,6 +171,42 @@ class GestionVentas:
                 datos[id_venta]['cliente']= nuevo_cliente
                 self.guardar_datos(datos)
                 print('El cliente ha sido modificado con éxito')
+            else:
+                print(f'No se encontró venta con la id:{id_venta}')
+        except Exception as e:
+            print(f'Error al actualizar la venta: {e}')
+
+    def actualizar_productos(self, id_venta, nuevos_producto):
+        try:
+            datos = self.leer_datos()
+            if str(id_venta) in datos.keys():
+                datos[id_venta]['productos'] = nuevos_producto
+                self.guardar_datos(datos)
+                print('Los productos han sido modificados con éxito')
+            else:
+                print(f'No se encontró venta con la id:{id_venta}')
+        except Exception as e:
+            print(f'Error al actualizar la venta: {e}')
+    
+    def actualizar_direccion_envio(self, id_venta, nueva_direccion_envio):
+        try:
+            datos = self.leer_datos()
+            if str(id_venta) in datos.keys():
+                datos[id_venta]['direccion_envio'] = nueva_direccion_envio
+                self.guardar_datos(datos)
+                print('Los dirección del envio se ha modificados con éxito')
+            else:
+                print(f'No se encontró venta con la id:{id_venta}')
+        except Exception as e:
+            print(f'Error al actualizar la venta: {e}')
+    
+    def actualizar_vendedor(self, id_venta, nuevo_vendedor):
+        try:
+            datos = self.leer_datos()
+            if str(id_venta) in datos.keys():
+                datos[id_venta]['vendedor'] = nuevo_vendedor
+                self.guardar_datos(datos)
+                print('El vendedor se ha modificados con éxito')
             else:
                 print(f'No se encontró venta con la id:{id_venta}')
         except Exception as e:

@@ -3,13 +3,13 @@
         "id_venta": "1",
         "fecha": "29-07-24",
         "cliente": "Rios Gerardo",
-        "monto_total": 50000.0,
+        "monto_total": 70000.0,
         "productos": [
-            "Producto1",
-            "Producto2",
-            "Producto3"
+            "Prod1",
+            "Prod2",
+            "Prod3"
         ],
-        "direccion_envio": "Pasaje Castelli 4460"
+        "direccion_envio": "Molina 160"
     },
     "2": {
         "id_venta": "2",
@@ -21,7 +21,7 @@
             "Producto5",
             "Producto6"
         ],
-        "vendedor": "Juan"
+        "vendedor": "Lucas"
     },
     "3": {
         "id_venta": "3",
