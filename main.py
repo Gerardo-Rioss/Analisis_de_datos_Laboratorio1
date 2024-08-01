@@ -19,17 +19,20 @@ def mostrar_menu():
     print("========== Menú de Gestión de Ventas ==========")
     print('1. Agregar Venta Online')
     print('2. Agregar Venta Local')
-    print('3. Mostrar Ventas')
+    print("================== Consultas ==================")
+    print('3. Mostrar Todas las Ventas')
+    print('4. Mostrar Ventas OnLine')
+    print('5. Mostrar Ventas Locales')
     print("========== Actualizar por ID de venta ==========")
-    print('4. Monto Total')
-    print('5. Cliente')
-    print('6. Productos')
-    print('7. Dirección del envio')
-    print('8. Vendedor')
+    print('6. Monto Total')
+    print('7. Cliente')
+    print('8. Productos')
+    print('9. Dirección del envio')
+    print('10. Vendedor')
     print('======================================================')
-    print('9. Eliminarar Venta por ID')
+    print('11. Eliminarar Venta por ID')
     print('======================================================')
-    print('10. Salir')
+    print('12. Salir')
     print('======================================================')
 
 def ingresar_cliente():
@@ -213,6 +216,22 @@ def mostrar_todas_las_ventas(gestion):
     print('=====================================================================')
     input('Presione enter para continuar...')
 
+def mostrar_todas_las_ventas_online(gestion):
+    print('=============== Listado completo de las  Ventas Online ==============')
+    for venta in gestion.leer_datos().values():
+        if 'direccion_envio' in venta:
+            print(f"id: {venta['id_venta']} - CLiente {venta['cliente']} - Monto: ${(venta['monto_total']):.2f} - Dirección envío: {venta['direccion_envio']}")
+    print('=====================================================================')
+    input('Presione enter para continuar...')
+
+def mostrar_todas_las_ventas_local(gestion):
+    print('=============== Listado completo de las  Ventas Local ==============')
+    for venta in gestion.leer_datos().values():
+        if 'vendedor' in venta:
+            print(f"id: {venta['id_venta']} - CLiente {venta['cliente']} - Monto: ${(venta['monto_total']):.2f} - Vendedor: {venta['vendedor']}")
+    print('=====================================================================')
+    input('Presione enter para continuar...')
+
 if __name__ == '__main__':
     archivo_ventas='ventas_db.json'
     gestion = GestionVentas(archivo_ventas)
@@ -227,18 +246,22 @@ if __name__ == '__main__':
         elif opcion == '3':
             mostrar_todas_las_ventas(gestion)
         elif opcion == '4':
-            actualizar_monto_total_venta(gestion)
+            mostrar_todas_las_ventas_online(gestion)
         elif opcion == '5':
-            actualizar_cliente(gestion)
+            mostrar_todas_las_ventas_local(gestion)
         elif opcion == '6':
-            actualizar_productos(gestion)
+            actualizar_monto_total_venta(gestion)
         elif opcion == '7':
-            actualizar_direccion_envio(gestion)
+            actualizar_cliente(gestion)
         elif opcion == '8':
-            actualizar_vendedor(gestion)
+            actualizar_productos(gestion)
         elif opcion == '9':
-            eliminar_venta_por_id(gestion)
+            actualizar_direccion_envio(gestion)
         elif opcion == '10':
+            actualizar_vendedor(gestion)
+        elif opcion == '11':
+            eliminar_venta_por_id(gestion)
+        elif opcion == '12':
             print('Saliendo del programa...')
             break
         else:

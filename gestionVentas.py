@@ -223,6 +223,3 @@ class GestionVentas:
                 print(f'No se encontró la venta con la id:{id_venta}')
         except Exception as e:
             print(f'Error al eliminar la venta: {e}')
-
-    
-
