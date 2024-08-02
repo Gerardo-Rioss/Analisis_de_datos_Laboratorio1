@@ -26,7 +26,7 @@
     "3": {
         "id_venta": "3",
         "fecha": "29-07-24",
-        "cliente": "Ojeda Alejandra",
+        "cliente": "Romero Natalia",
         "monto_total": 200000.0,
         "productos": [
             "Producto7",
@@ -44,5 +44,17 @@
             "Producto15"
         ],
         "direccion_envio": "Alberdi 1500"
+    },
+    "5": {
+        "id_venta": "5",
+        "fecha": "02-08-24",
+        "cliente": "asdf",
+        "monto_total": 20.0,
+        "productos": [
+            "asdf",
+            "asdf",
+            "asdf"
+        ],
+        "direccion_envio": "asdfsaf"
     }
 }

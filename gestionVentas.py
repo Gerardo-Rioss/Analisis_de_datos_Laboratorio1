@@ -147,8 +147,7 @@ class GestionVentas:
                 else:
                     venta = VentaLocal(**venta_data)
                 return venta
-            else:
-                print(f'No se encontró la venta con id: {id_venta}')
+            
         except Exception as e:
             print('Error al leer venta: {e}')
     
