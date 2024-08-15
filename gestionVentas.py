@@ -192,19 +192,40 @@ class GestionVentas:
         except Exception as error:
             print(f'Error inesperado al crear venta: {error}')
 
-    """ def leer_venta(self, id_venta):
+    def leer_venta(self, id_venta):
         try:
-            datos = self.leer_datos()
-            if id_venta in datos:
-                venta_data = datos[id_venta]
-                if 'direccion_envio' in venta_data:
-                    venta = VentaOnline(**venta_data)
-                else:
-                    venta = VentaLocal(**venta_data)
-                return venta
-            
-        except Exception as e:
-            print('Error al leer venta: {e}') """
+            connection = self.connect()
+            if connection:
+                with connection.cursor(dictionary=True) as cursor:
+                    cursor.execute('SELECT * FROM venta WHERE id_venta = %s', (id_venta,))
+                    venta_data = cursor.fetchone()
+
+                    if venta_data:
+                        cursor.execute('SELECT departamento FROM ventaonline WHERE id_venta = %s', (id_venta,))
+                        direccion_envio = cursor.fetchone()
+
+                        if direccion_envio:
+                            venta_data['direccion_envio'] = direccion_envio['direccion_envio']
+                            venta = VentaOnline(**venta_data)
+                        else:
+                            cursor.execute('SELECT vendedor FROM ventalocal WHERE id_venta = %s', (id_venta,))
+                            vendedor = cursor.fetchone()
+                            if vendedor:
+                                venta_data['vendedor'] = vendedor['vendedor']
+                                venta = VentaLocal(**venta_data)
+                            else:
+                                venta = venta(**venta_data)
+
+                        print(f'Venta encontrada: {venta}')
+
+                    else:
+                        print(f'No se encontró la venta con la id {id_venta}.')
+
+        except Error as e:
+            print('Error al leer venta: {e}')
+        finally:
+            if connection.is_connected():
+                connection.close()
     
     def actualizar_monto_total(self, id_venta, nuevo_monto_total):
         try:
