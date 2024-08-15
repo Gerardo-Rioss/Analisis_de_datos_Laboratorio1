@@ -229,15 +229,28 @@ class GestionVentas:
     
     def actualizar_monto_total(self, id_venta, nuevo_monto_total):
         try:
-            datos = self.leer_datos()
-            if str(id_venta) in datos.keys():
-                datos[id_venta]['monto_total'] = nuevo_monto_total
-                self.guardar_datos(datos)
-                print(f'El monto total de la venta con id: {id_venta}, fue actualizado con éxito')
-            else:
-                print(f'No se encontró venta con la id:{id_venta}')
+            connection = self.connect()
+            if connection:
+                with connection.cursor() as cursor:
+                    cursor.execute('SELECT * FROM venta WHERE id_venta = %s', (id_venta,))
+                    if not cursor.fetchone():
+                        print(f'No se encontro ninguna venta con el Número {id_venta}.')
+                        return
+                    
+                    cursor.execute('UPDATE venta SET monto_total = %s WHERE id_venta = %s', (nuevo_monto_total, id_venta))
+
+                    if cursor.rowcount > 0:
+                        connection.commit()
+                        print(f'La venta con id: {id_venta} se actualizo correctamente.-')
+                    else:
+                        print(f'No se encontro venta con el numero: {id_venta}')
+
         except Exception as e:
-            print(f'Error al actualizar la venta: {e}')
+            print(f'Error al actualizar venta: {e}')
+        finally:
+            if connection.is_connected():
+                connection.close()
+
     
     def actualizar_cliente(self, id_venta, nuevo_cliente):
         try:
