@@ -1,5 +1,8 @@
+import mysql.connector
+from mysql.connector import Error
+from decouple import config
 import datetime
-import json
+
 class Venta:
     def __init__(self,id_venta, fecha, cliente, productos, monto_total):
         self.id_venta = id_venta
@@ -101,7 +104,11 @@ class VentaLocal(Venta):
 
 class GestionVentas:
     def __init__(self, archivo):
-        self.archivo = archivo
+        self.host = config('DB_HOST')
+        self.database = config('DB_NAME')
+        self.user= config('DB_USER')
+        self.password=config('DB_PASSWORD')
+        self.port = config('DB_PORT')
         
     def leer_datos(self):
         try:
@@ -113,6 +120,24 @@ class GestionVentas:
             raise Exception(f'Error al leer datos del archivo: {error}')
         else:
             return datos
+    
+    def connect(self):
+        '''Establecer una conexión con la base de datos'''
+        try:
+            connection = mysql.connector.connect(
+                host=self.host,
+                database=self.database,
+                user=self.user,
+                password=self.password,
+                port=self.port
+            )
+
+            if connection.is_connected():
+                return connection
+
+        except Error as e:
+            print(f'Error al conectar a la base de datos: {e}')
+            return None
 
     def guardar_datos(self, datos):
         try:
@@ -126,18 +151,48 @@ class GestionVentas:
 
     def crear_venta(self, venta):
         try:
-            datos = self.leer_datos()
-            id_venta = str(venta.id_venta)
-            if not str(id_venta) in datos.keys():
-                datos[id_venta] = venta.to_dict()
-                self.guardar_datos(datos)
-                print(f"Fecha: {venta.fecha}, Cliente: {venta.cliente}...la venta se guardo correctamente.")
-            else:
-                print(f"Ya existe la venta con el mismo id '{id_venta}'.")
-        except Exception as error:
-            print(f'Error inesperado al crear la venta: {error}')
+            connection = self.connect()
+            if connection:
+                with connection.cursor() as cursor:
+                    cursor.execute('SELECT dni FROM venta WHERE id_venta = %s', (venta.id_venta,))
+                    if cursor.fetchone():
+                        print(f'Error: Ya existe una venta con ese número: {venta.id_venta}')
+                        return
+                    
+                    if isinstance(venta, VentaOnline):
+                        query = '''
+                        INSERT INTO venta (id_venta, fecha, cliente, monto_total, productos)
+                        VALUES (%s, %s, %s, %s, %s)
+                        '''
+                        cursor.execute(query, (venta.id_venta, venta.fecha, venta.cliente, venta.monto_total, venta.productos))
 
-    def leer_venta(self, id_venta):
+                        query = '''
+                        INSERT INTO ventaonline (id_venta, direccion_envio)
+                        VALUES (%s, %s)
+                        '''
+
+                        cursor.execute(query, (venta.id_venta, venta.direccion_envio))
+
+                    elif isinstance(venta, VentaLocal):
+                        query = '''
+                        INSERT INTO venta (id_venta, fecha, cliente, monto_total, productos)
+                        VALUES (%s, %s, %s, %s, %s)
+                        '''
+                        cursor.execute(query, ( venta.id_venta, venta.fecha, venta.cliente, venta.monto_total, venta.productos))
+
+                        query = '''
+                        INSERT INTO ventalocal (id_venta, vendedor)
+                        VALUES (%s, %s)
+                        '''
+
+                        cursor.execute(query, (venta.id_venta, venta.vendedor))
+
+                    connection.commit()
+                    print(f'Venta: {venta.id_venta},{venta.fecha}, {venta.cliente}, {venta.monto_total}, {venta.productos} creado correctamente')
+        except Exception as error:
+            print(f'Error inesperado al crear venta: {error}')
+
+    """ def leer_venta(self, id_venta):
         try:
             datos = self.leer_datos()
             if id_venta in datos:
@@ -149,7 +204,7 @@ class GestionVentas:
                 return venta
             
         except Exception as e:
-            print('Error al leer venta: {e}')
+            print('Error al leer venta: {e}') """
     
     def actualizar_monto_total(self, id_venta, nuevo_monto_total):
         try:
