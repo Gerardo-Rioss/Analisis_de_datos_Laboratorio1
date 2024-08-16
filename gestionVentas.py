@@ -156,7 +156,7 @@ class GestionVentas:
                 with connection.cursor() as cursor:
                     cursor.execute('SELECT dni FROM venta WHERE id_venta = %s', (venta.id_venta,))
                     if cursor.fetchone():
-                        print(f'Error: Ya existe una venta con ese número: {venta.id_venta}')
+                        print(f'Error: Ya existe una venta con esa id: {venta.id_venta}')
                         return
                     
                     if isinstance(venta, VentaOnline):
@@ -250,7 +250,6 @@ class GestionVentas:
         finally:
             if connection.is_connected():
                 connection.close()
-
     
     def actualizar_cliente(self, id_venta, nuevo_cliente):
         try:
@@ -302,12 +301,25 @@ class GestionVentas:
 
     def eliminar_venta(self, id_venta):
         try:
-            datos = self.leer_datos()
-            if str(id_venta) in datos.keys():
-                del datos[id_venta]
-                self.guardar_datos(datos)
-                print(f'La venta con la id:{id_venta} se ha eliminado correctamente')
-            else:
-                print(f'No se encontró la venta con la id:{id_venta}')
+            connection = self.connect()
+            if connection:
+                with connection.cursor() as cursor:
+                    cursor.execute('SELECT * FROM venta WHERE id_venta = %s', (id_venta,))
+                    if not cursor.fetchone():
+                        print(f'No se encontro la venta con el número: {id_venta}.')
+                        return 
+                    
+                    cursor.execute('DELETE FROM ventalocal WHERE id_venta = %s', (id_venta,))
+                    cursor.execute('DELETE FROM ventaonline WHERE id_venta = %s', (id_venta,))
+                    cursor.execute('DELETE FROM venta WHERE id_venta = %s', (id_venta,))
+                    if cursor.rowcount > 0:
+                        connection.commit()
+                        print(f'La venta con id: {id_venta} eliminado correctamente')
+                    else:
+                        print(f'No se encontró ninguna venta con id: {id_venta}')
+
         except Exception as e:
-            print(f'Error al eliminar la venta: {e}')
+            print(f'Error al eliminar el colaborador: {e}')
+        finally:
+            if connection.is_connected():
+                connection.close()
