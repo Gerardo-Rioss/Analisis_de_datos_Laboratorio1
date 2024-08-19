@@ -154,7 +154,7 @@ class GestionVentas:
             connection = self.connect()
             if connection:
                 with connection.cursor() as cursor:
-                    cursor.execute('SELECT dni FROM venta WHERE id_venta = %s', (venta.id_venta,))
+                    cursor.execute('SELECT id_venta FROM venta WHERE id_venta = %s', (venta.id_venta,))
                     if cursor.fetchone():
                         print(f'Error: Ya existe una venta con esa id: {venta.id_venta}')
                         return
