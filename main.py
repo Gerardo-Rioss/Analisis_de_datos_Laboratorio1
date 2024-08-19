@@ -234,8 +234,7 @@ def mostrar_todas_las_ventas_local(gestion):
     input('Presione enter para continuar...')
 
 if __name__ == '__main__':
-    archivo_ventas='ventas_db.json'
-    gestion = GestionVentas(archivo_ventas)
+    gestion = GestionVentas()
 
     while True:
         limpiar_pantalla()

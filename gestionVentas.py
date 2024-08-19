@@ -103,7 +103,7 @@ class VentaLocal(Venta):
         return data
 
 class GestionVentas:
-    def __init__(self, archivo):
+    def __init__(self):
         self.host = config('DB_HOST')
         self.database = config('DB_NAME')
         self.user= config('DB_USER')
