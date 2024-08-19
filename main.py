@@ -60,9 +60,10 @@ def ingresar_monto_total():
 def ingresar_productos():
     while True:
         try:
-            productos = input(
+            """ productos = input(
                 'Ingrese los productos (separados por coma): ').split(',')
-            productos = [prod.strip()for prod in productos if prod.strip()]
+            productos = [prod.strip()for prod in productos if prod.strip()] """
+            productos = input('Ingrese los productos (separados por coma): ')
             if productos:
                 return productos
             else:
