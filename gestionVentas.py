@@ -193,36 +193,31 @@ class GestionVentas:
             print(f'Error inesperado al crear venta: {error}')
 
     def leer_venta(self, id_venta):
+        connection= None
         try:
             connection = self.connect()
             if connection:
                 with connection.cursor(dictionary=True) as cursor:
-                    cursor.execute('SELECT * FROM venta WHERE id_venta = %s', (id_venta,))
-                    venta_data = cursor.fetchone()
-
-                    if venta_data:
-                        cursor.execute('SELECT departamento FROM ventaonline WHERE id_venta = %s', (id_venta,))
+                    cursor.execute('SELECT * FROM venta')
+                    ventas_data = cursor.fetchall()
+                    ventas = []
+                    for venta_data in ventas_data:
+                        id_venta = venta_data['id_venta']
+                        cursor.execute('SELECT direccion_envio FROM ventaonline WHERE id_venta = %s', (id_venta,))
                         direccion_envio = cursor.fetchone()
-
                         if direccion_envio:
                             venta_data['direccion_envio'] = direccion_envio['direccion_envio']
                             venta = VentaOnline(**venta_data)
                         else:
                             cursor.execute('SELECT vendedor FROM ventalocal WHERE id_venta = %s', (id_venta,))
                             vendedor = cursor.fetchone()
-                            if vendedor:
-                                venta_data['vendedor'] = vendedor['vendedor']
-                                venta = VentaLocal(**venta_data)
-                            else:
-                                venta = venta(**venta_data)
-
-                        print(f'Venta encontrada: {venta}')
-
-                    else:
-                        print(f'No se encontró la venta con la id {id_venta}.')
-
-        except Error as e:
-            print('Error al leer venta: {e}')
+                            venta_data['vendedor'] = vendedor['vendedor']
+                            venta = VentaLocal(**venta_data)
+                        ventas.append(venta)
+        except Exception as e:
+            print(f'Error al mostrar los ventas: {e}')
+        else:
+            return ventas
         finally:
             if connection.is_connected():
                 connection.close()
@@ -331,15 +326,11 @@ class GestionVentas:
                 with connection.cursor(dictionary=True) as cursor:
                     cursor.execute('SELECT * FROM venta')
                     ventas_data = cursor.fetchall()
-
                     ventas = []
-                    
                     for venta_data in ventas_data:
                         id_venta = venta_data['id_venta']
-
                         cursor.execute('SELECT direccion_envio FROM ventaonline WHERE id_venta = %s', (id_venta,))
                         direccion_envio = cursor.fetchone()
-
                         if direccion_envio:
                             venta_data['direccion_envio'] = direccion_envio['direccion_envio']
                             venta = VentaOnline(**venta_data)
@@ -348,11 +339,9 @@ class GestionVentas:
                             vendedor = cursor.fetchone()
                             venta_data['vendedor'] = vendedor['vendedor']
                             venta = VentaLocal(**venta_data)
-
                         ventas.append(venta)
-
         except Exception as e:
-            print(f'Error al mostrar los colaboradores: {e}')
+            print(f'Error al mostrar los ventas: {e}')
         else:
             return ventas
         finally:
