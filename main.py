@@ -113,7 +113,7 @@ def ingresar_crear_id():
             id = int(input('Ingrese la ID de la venta que quiere agregar: '))
             if id < 0:
                 print('Error, la ID debe ser un numero entero positivo.')
-            elif (gestion.leer_venta(id)):
+            elif (gestion.leer_venta_por_id(id)):
                 print('Error, la ID ya existe, debe ingresar otro valor.')
             else:
                 return str(id)
