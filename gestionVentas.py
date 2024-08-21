@@ -338,7 +338,6 @@ class GestionVentas:
                     if not cursor.fetchone():
                         print(f'No se encontro la venta con el número: {id_venta}.')
                         return 
-                    
                     cursor.execute('DELETE FROM ventalocal WHERE id_venta = %s', (id_venta,))
                     cursor.execute('DELETE FROM ventaonline WHERE id_venta = %s', (id_venta,))
                     cursor.execute('DELETE FROM venta WHERE id_venta = %s', (id_venta,))
