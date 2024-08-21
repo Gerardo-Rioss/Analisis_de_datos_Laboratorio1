@@ -60,9 +60,6 @@ def ingresar_monto_total():
 def ingresar_productos():
     while True:
         try:
-            """ productos = input(
-                'Ingrese los productos (separados por coma): ').split(',')
-            productos = [prod.strip()for prod in productos if prod.strip()] """
             productos = input('Ingrese los productos (separados por coma): ')
             if productos:
                 return productos
@@ -100,7 +97,7 @@ def ingresar_buscar_id():
         try:
             id = int(input('Ingrese la ID de la venta que quiere buscar: '))
             if id > 0:
-                return str(id)
+                return id
             else:
                 print('Error, la ID debe ser un numero entero positivo.')
             print("Error, debe ingresar la ID... ")
@@ -111,12 +108,13 @@ def ingresar_crear_id():
     while True:
         try:
             id = int(input('Ingrese la ID de la venta que quiere agregar: '))
+            venta=gestion.leer_venta_por_id(id)
             if id < 0:
                 print('Error, la ID debe ser un numero entero positivo.')
-            elif (gestion.leer_venta_por_id(id)):
+            elif (venta):
                 print('Error, la ID ya existe, debe ingresar otro valor.')
             else:
-                return str(id)
+                return id
         except ValueError:
             print('Error: debe ingresar un número entero.')
 
@@ -158,11 +156,13 @@ def buscar_venta_por_id(gestion):
 def actualizar_monto_total_venta(gestion):
     try:
         id_venta = ingresar_buscar_id()
-        if gestion.leer_venta(id_venta):
-            venta = gestion.leer_venta(id_venta)
+        venta = gestion.leer_venta_por_id(id_venta)
+        if venta:
             print(f"El monto de la venta que quiere actualizar es: {venta.monto_total}")
             nuevo_monto_total = ingresar_monto_total()
             gestion.actualizar_monto_total(id_venta, nuevo_monto_total)
+        else:
+            print("No se encontro la venta con la id ingresada.-")
     except Exception as e:
         print(f'Error al actualizar {e}')
     print('=====================================================================')    
@@ -171,11 +171,13 @@ def actualizar_monto_total_venta(gestion):
 def actualizar_cliente(gestion):
     try:
         id_venta = ingresar_buscar_id()
-        if gestion.leer_venta(id_venta):
-            venta = gestion.leer_venta(id_venta)
+        venta = gestion.leer_venta_por_id(id_venta)
+        if venta:
             print(f"El cliente que quiere actualizar es: {venta.cliente}")
             nuevo_cliente =ingresar_cliente()
             gestion.actualizar_cliente(id_venta, nuevo_cliente)
+        else:
+            print("No se encontro la venta con la id ingresada.-")
     except Exception as e:
         print(f'Error al actualizar {e}')
     print('=====================================================================')    
@@ -184,11 +186,13 @@ def actualizar_cliente(gestion):
 def actualizar_productos(gestion):
     try:
         id_venta = ingresar_buscar_id()
-        if gestion.leer_venta(id_venta):
-            venta = gestion.leer_venta(id_venta)
+        venta = gestion.leer_venta_por_id(id_venta)
+        if venta:
             print(f"Los productos que quiere actualizar son: {venta.productos}")
-            nuevos_productos = ingresar_productos()
+            nuevos_productos =ingresar_productos()
             gestion.actualizar_productos(id_venta, nuevos_productos)
+        else:
+            print("No se encontro la venta con la id ingresada.-")
     except Exception as e:
         print(f'Error al actualizar {e}')
     print('=====================================================================')    
@@ -197,14 +201,16 @@ def actualizar_productos(gestion):
 def actualizar_direccion_envio(gestion):
     try:
         id_venta = ingresar_buscar_id()
-        if gestion.leer_venta(id_venta):
-            venta = gestion.leer_venta(id_venta)
+        venta= gestion.leer_venta_por_id(id_venta)
+        if venta:
             if isinstance(venta, VentaOnline):
                 print(f"La direccion que quiere actualizar es: {venta.direccion_envio}")
                 nueva_direccion = ingresar_direccion_envio()
                 gestion.actualizar_direccion_envio(id_venta, nueva_direccion)
             else:
                 print('No existe una venta OnLIne Con esa ID.')
+        else:
+            print('No existe una venta Con esa ID.')
     except Exception as e:
         print(f'Error al actualizar {e}')
     print('=====================================================================')    
@@ -213,14 +219,16 @@ def actualizar_direccion_envio(gestion):
 def actualizar_vendedor(gestion):
     try:
         id_venta = ingresar_buscar_id()
-        if gestion.leer_venta(id_venta):
-            venta= gestion.leer_venta(id_venta)
+        venta= gestion.leer_venta_por_id(id_venta)
+        if venta:
             if isinstance(venta,VentaLocal):
                 print(f"El vendedor que quiere actualizar es: {venta.vendedor}")
                 nuevo_vendedor = ingresar_vendedor()
                 gestion.actualizar_vendedor(id_venta, nuevo_vendedor)
             else:
                 print('No existe una venta Local con  esa ID')
+        else:
+            print('No existe una venta Con esa ID.')
     except Exception as e:
         print(f'Error al actualizar {e}')
     print('=====================================================================')    

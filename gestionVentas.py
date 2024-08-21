@@ -215,9 +215,9 @@ class GestionVentas:
                                 venta = VentaOnline(**venta_data)
                             else:
                                 venta = Venta(**venta_data)
-                        print(f'Venta encontrada encontrado: {venta}')
+                        return venta
                     else:
-                        print(f'No se encontró la venta con id {id_venta}.')
+                        return None
         except Error as e:
             print('Error al leer venta: {e}')
         finally:
@@ -233,15 +233,12 @@ class GestionVentas:
                     if not cursor.fetchone():
                         print(f'No se encontro ninguna venta con el Número {id_venta}.')
                         return
-                    
                     cursor.execute('UPDATE venta SET monto_total = %s WHERE id_venta = %s', (nuevo_monto_total, id_venta))
-
                     if cursor.rowcount > 0:
                         connection.commit()
                         print(f'La venta con id: {id_venta} se actualizo correctamente.-')
                     else:
                         print(f'No se encontro venta con el numero: {id_venta}')
-
         except Exception as e:
             print(f'Error al actualizar venta: {e}')
         finally:
@@ -250,51 +247,87 @@ class GestionVentas:
     
     def actualizar_cliente(self, id_venta, nuevo_cliente):
         try:
-            datos= self.leer_datos()
-            if str(id_venta) in datos.keys():
-                datos[id_venta]['cliente']= nuevo_cliente
-                self.guardar_datos(datos)
-                print('El cliente ha sido modificado con éxito')
-            else:
-                print(f'No se encontró venta con la id:{id_venta}')
+            connection = self.connect()
+            if connection:
+                with connection.cursor() as cursor:
+                    cursor.execute('SELECT * FROM venta WHERE id_venta = %s', (id_venta,))
+                    if not cursor.fetchone():
+                        print(f'No se encontro ninguna venta con el Número {id_venta}.')
+                        return
+                    cursor.execute('UPDATE venta SET cliente = %s WHERE id_venta = %s', (nuevo_cliente, id_venta))
+                    if cursor.rowcount > 0:
+                        connection.commit()
+                        print(f'La venta con id: {id_venta} se actualizo correctamente.-')
+                    else:
+                        print(f'No se encontro venta con el numero: {id_venta}')
         except Exception as e:
-            print(f'Error al actualizar la venta: {e}')
+            print(f'Error al actualizar venta: {e}')
+        finally:
+            if connection.is_connected():
+                connection.close()
 
     def actualizar_productos(self, id_venta, nuevos_producto):
         try:
-            datos = self.leer_datos()
-            if str(id_venta) in datos.keys():
-                datos[id_venta]['productos'] = nuevos_producto
-                self.guardar_datos(datos)
-                print('Los productos han sido modificados con éxito')
-            else:
-                print(f'No se encontró venta con la id:{id_venta}')
+            connection = self.connect()
+            if connection:
+                with connection.cursor() as cursor:
+                    cursor.execute('SELECT * FROM venta WHERE id_venta = %s', (id_venta,))
+                    if not cursor.fetchone():
+                        print(f'No se encontro ninguna venta con el Número {id_venta}.')
+                        return
+                    cursor.execute('UPDATE venta SET productos = %s WHERE id_venta = %s', (nuevos_producto, id_venta))
+                    if cursor.rowcount > 0:
+                        connection.commit()
+                        print(f'La venta con id: {id_venta} se actualizo correctamente.-')
+                    else:
+                        print(f'No se encontro venta con el numero: {id_venta}')
         except Exception as e:
-            print(f'Error al actualizar la venta: {e}')
+            print(f'Error al actualizar venta: {e}')
+        finally:
+            if connection.is_connected():
+                connection.close()
     
     def actualizar_direccion_envio(self, id_venta, nueva_direccion_envio):
         try:
-            datos = self.leer_datos()
-            if str(id_venta) in datos.keys():
-                datos[id_venta]['direccion_envio'] = nueva_direccion_envio
-                self.guardar_datos(datos)
-                print('Los dirección del envio se ha modificados con éxito')
-            else:
-                print(f'No se encontró venta con la id:{id_venta}')
+            connection = self.connect()
+            if connection:
+                with connection.cursor() as cursor:
+                    cursor.execute('SELECT * FROM venta WHERE id_venta = %s', (id_venta,))
+                    if not cursor.fetchone():
+                        print(f'No se encontro ninguna venta con el Número {id_venta}.')
+                        return
+                    cursor.execute('UPDATE ventaonline SET direccion_envio = %s WHERE id_venta = %s', (nueva_direccion_envio, id_venta))
+                    if cursor.rowcount > 0:
+                        connection.commit()
+                        print(f'La venta con id: {id_venta} se actualizo correctamente.-')
+                    else:
+                        print(f'No se encontro venta con la id: {id_venta}')
         except Exception as e:
-            print(f'Error al actualizar la venta: {e}')
+            print(f'Error al actualizar venta: {e}')
+        finally:
+            if connection.is_connected():
+                connection.close()
     
     def actualizar_vendedor(self, id_venta, nuevo_vendedor):
         try:
-            datos = self.leer_datos()
-            if str(id_venta) in datos.keys():
-                datos[id_venta]['vendedor'] = nuevo_vendedor
-                self.guardar_datos(datos)
-                print('El vendedor se ha modificados con éxito')
-            else:
-                print(f'No se encontró venta con la id:{id_venta}')
+            connection = self.connect()
+            if connection:
+                with connection.cursor() as cursor:
+                    cursor.execute('SELECT * FROM venta WHERE id_venta = %s', (id_venta,))
+                    if not cursor.fetchone():
+                        print(f'No se encontro ninguna venta con el Número {id_venta}.')
+                        return
+                    cursor.execute('UPDATE ventalocal SET vendedor = %s WHERE id_venta = %s', (nuevo_vendedor, id_venta))
+                    if cursor.rowcount > 0:
+                        connection.commit()
+                        print(f'La venta con id: {id_venta} se actualizo correctamente.-')
+                    else:
+                        print(f'No se encontro venta con la id: {id_venta}')
         except Exception as e:
-            print(f'Error al actualizar la venta: {e}')
+            print(f'Error al actualizar venta: {e}')
+        finally:
+            if connection.is_connected():
+                connection.close()
 
     def eliminar_venta(self, id_venta):
         try:
